@@ -23,19 +23,23 @@ interface CartItemsAmount {
 
 const Home = (): JSX.Element => {
   const [products, setProducts] = useState<ProductFormatted[]>([]);
-  // const { addProduct, cart } = useCart();
+  const { addProduct, cart } = useCart();
 
-  // const cartItemsAmount = cart.reduce((sumAmount, product) => {
-  //   // TODO
-  // }, {} as CartItemsAmount)
+  const cartItemsAmount = cart.reduce((sumAmount, product) => {
+    // TODO
+    if (!sumAmount[product.id]) {
+      sumAmount[product.id] = 1;
+    } else {
+      sumAmount[product.id]++;
+    }
+
+    return sumAmount;
+  }, {} as CartItemsAmount);
 
   useEffect(() => {
     async function loadProducts() {
       // TODO
-      const productsJson = await (
-        await fetch("http://localhost:3333/products")
-      ).json();
-      setProducts(productsJson);
+      api.get("/products").then((response) => setProducts(response.data));
     }
 
     loadProducts();
@@ -43,11 +47,34 @@ const Home = (): JSX.Element => {
 
   function handleAddProduct(id: number) {
     // TODO
+    addProduct(id);
   }
 
   return (
     <ProductList>
-      <li>
+      {products &&
+        products.map((item, index) => (
+          <li key={item.id}>
+            <img src={item.image} alt={item.title} />
+            <strong>{item.title}</strong>
+            <span>{formatPrice(item.price)}</span>
+
+            <button
+              type="button"
+              data-testid="add-product-button"
+              onClick={() => handleAddProduct(item.id)}
+            >
+              <div data-testid="cart-product-quantity">
+                <MdAddShoppingCart size={16} color="#FFF" />
+                {cartItemsAmount[item.id] || 0}
+              </div>
+
+              <span>ADICIONAR AO CARRINHO</span>
+            </button>
+          </li>
+        ))}
+
+      {/* <li>
         <img
           src="https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis1.jpg"
           alt="Tênis de Caminhada Leve Confortável"
@@ -61,12 +88,12 @@ const Home = (): JSX.Element => {
         >
           <div data-testid="cart-product-quantity">
             <MdAddShoppingCart size={16} color="#FFF" />
-            {/* {cartItemsAmount[product.id] || 0} */} 2
+            {cartItemsAmount[product.id] || 0} 2
           </div>
 
           <span>ADICIONAR AO CARRINHO</span>
         </button>
-      </li>
+      </li> */}
     </ProductList>
   );
 };
