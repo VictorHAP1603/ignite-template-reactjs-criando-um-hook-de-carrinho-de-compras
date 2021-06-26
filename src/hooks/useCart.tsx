@@ -78,7 +78,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
             JSON.stringify(amountAdded)
           );
 
-          throw new Error();
+          throw new Error("Quantidade solicitada fora de estoque");
         }
 
         setCart(amountAdded);
@@ -96,7 +96,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       }
     } catch (error) {
       // TODO
-      toast.error("Quantidade solicitada fora de estoque");
+      toast.error(`${error}`);
     }
   };
 
@@ -109,7 +109,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       setCart(cartFiltred);
     } catch {
       // TODO
-      toast.error("Erro na remoção do produto");
+      toast.error("Erro na adição do produto");
     }
   };
 
@@ -143,7 +143,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
           );
           setCart(amountAdded);
         } else {
-          throw new Error();
+          throw new Error("Quantidade solicitada fora de estoque");
         }
       } else {
         const amountAdded = cart.map((item) => {
@@ -158,7 +158,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       }
     } catch (error) {
       // TODO
-      toast.error("Quantidade solicitada fora de estoque");
+      toast.error(`${error}`);
     }
   };
 
